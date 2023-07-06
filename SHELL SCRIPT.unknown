@@ -1,0 +1,514 @@
+											SHELL SCRIPT
+										*******************	
+
+
+
+1.Programming lang :- c,c++,java,python,dotnet
+2.scripting lang :-java script,shell script
+3.Markup lang :- html,xml.
+What is this shell :-
+------------------------------------------------------------------------------------------------------------------------------------------
+	Shell is a main part of our kernel, whenever a user will send a request  to kernel 1st shell will receive the data and it will execute and based on the output it will send a request to kernel in  machine readable lang....
+
+
+
+Types of Shell :
+------------------------------------------------------------------------------------------------------------------------------------------
+1. The Bourne Shell :-
+2. Bash shell :- it is called the default shell of many linux distributions.
+3. The C Shell :-
+4. The Korn Shell :-
+
+
+Bash shell →  Bash is a unix shell and command language.
+Scripting :-
+Scripting is a loosely coupled code...
+In the script there is no syntax..
+
+
+
+what is shell scripting :
+------------------------------------------------------------------------------------------------------------------------------------------
+	Shell scripting is a combination of linux commands, it is used to perform a daily task like ,backup
+and also it is used to perform any specific task like installation...
+
+
+why shell scripting :
+------------------------------------------------------------------------------------------------------------------------------------------
+	Using a shell script is most useful for repetitive tasks that may be time consuming to execute by typing one line at a time. A few examples of applications shell scripts can be used for include: Automating the code compiling process. Running a program or creating a program environment.
+
+
+Here are many reasons to write shell scripts —
+------------------------------------------------------------------------------------------------------------------------------------------
+> To avoid repetitive work and automation
+> System admins use shell scripting for routine backups
+> System monitoring
+> Adding new functionality to the shell etc.
+
+Advantages Of Shell Scripting.
+------------------------------------------------------------------------------------------------------------------------------------------
+> The command and syntax are exactly the same as those directly entered in command line, so programmer do not need to switch to entirely different syntax
+> Writing shell scripts are much quicker
+> Quick start
+> Interactive debugging etc.
+
+Disadvantages Of Shell Scripting
+------------------------------------------------------------------------------------------------------------------------------------------
+> Prone to costly errors, a single mistake can change the command which might be harmful
+> Slow execution speed
+> Not well suited for large and complex task
+
+
+Operator -- Description -- Example
++ (Addition) --> Adds values on either side of the operator --> `expr $a + $b` will give 30
+- (Subtraction) --> Subtracts right hand operand from left hand operand--> `expr $a - $b` will give -10
+* (Multiplication) --> Multiplies values on either side of the operator --> `expr $a \* $b` will give 200
+/ (Division) --> Divides left hand operand by right hand operand --> `expr $b / $a` will give 2
+% (Modulus) --> Divides left hand operand by right hand operand and returns remainder --> `expr $b % $a` will give 0
+
+
+
+Arithmetic :
+===============================================================================
+→ type 1 (operation)
+var1=10
+var2=20
+sum=`expr $var1 + $var2`
+echo $sum  → o/p → 30
+
+→ type 2 (operation)
+var1=10
+var2=20
+sum=$((var1 + var2))
+echo $sum  → o/p → 30
+
+
+[Shree@ip-172-31-42-159 ~]$ a=25
+[Shree@ip-172-31-42-159 ~]$ b=50
+[Shree@ip-172-31-42-159 ~]$ sum=$(echo "$a + $b" |bc)
+[Shree@ip-172-31-42-159 ~]$ echo $sum
+75
+
+Area of triangle
+[Shree@ip-172-31-42-159 ~]$ l=10
+[Shree@ip-172-31-42-159 ~]$ h=10
+[Shree@ip-172-31-42-159 ~]$ area=$(echo "0.5 * $l * $h" |bc)
+[Shree@ip-172-31-42-159 ~]$ echo $area
+50.0
+
+
+
+String Operations : to count String words
+------------------------------------------------------------------------------------------------------------------------------------------
+name=karnataka
+len=`expr length $name`    //expr is used to evaluate the expression
+echo $len  → o/p → 9
+
+
+
+Dynamic values
+echo "enter value : "
+read name
+len=`expr length $name`
+echo $len
+
+1.Looping Statements :
+------------------------------------------------------------------------------------------------------------------------------------------
+3 types :
+------------------------------------------------------------------------------------------------------------------------------------------
+1.For loop
+2.While Loop
+3.until loop
+
+
+WAP to print 1 to 10
+------------------------------------------------------------------------------------------------------------------------------------------
+for sum in {1..10}   
+     //{start..end}
+do
+echo $sum
+done
+
+
+WAP to print 10 to 1
+------------------------------------------------------------------------------------------------------------------------------------------
+for sum in {10..1}
+do
+echo $sum
+done
+
+
+WAP to print a to z
+------------------------------------------------------------------------------------------------------------------------------------------
+for sum in {a..z}
+do
+echo $sum
+done
+
+
+To list the files :
+------------------------------------------------------------------------------------------------------------------------------------------
+for i in *
+do
+echo $i
+done
+
+
+
+To display only specific kind of extension :
+------------------------------------------------------------------------------------------------------------------------------------------
+for i in $(ls *.sh)
+do
+echo $i
+done
+
+
+to get file starting with s and ending with conf
+[0root@ip-172-31-34-232 etc]# for i in s*.conf
+> do
+> if [ -f "$i" ]
+> then
+> echo "$i"
+> fi
+> done
+
+
+
+
+Conditional Statements :
+------------------------------------------------------------------------------------------------------------------------------------------
+As the name suggest it will get execute based on the conditions
+1.if statement
+2.if-else statement
+3.else-if statement
+
+
+1.if statement :
+------------------------------------------------------------------------------------------------------------------------------------------
+If the condition is true then only it will execute the task..
+syntax :-
+--------------------------
+if condition
+then
+statement
+fi
+Example :
+------------------------------------------------------------------------------------------------------------------------------------------
+echo enter the number
+read number
+if [ $number -lt 100 ]   // here lt is "less than"
+then
+printf $number is less than 100
+fi
+
+
+
+2)
+echo enter the number
+read number
+if [ $number -le 100 ]   //less than or equal to
+then
+echo $number is less than or equal to 100
+fi
+
+
+if-else :
+------------------------------------------------------------------------------------------------------------------------------------------
+If the condition is true then it will print if statement if the condition is false then it will execute else part
+echo enter name
+read name
+if [[ $name == "Jspiders" ]]
+then
+echo "you were right"
+else
+echo "better luck next time"
+fi
+
+
+
+By using if-else statements evaluate Even-odd numbers...
+#!/bin/bash
+echo "enter the number"
+read number
+if [ `expr $number % 2 ` == 1 ]
+then
+echo "the number is odd"
+else
+echo "even"
+fi
+or
+#!/bin/bash
+echo "enter the number"
+read number
+if [ $((number % 2)) == 1 ]
+then
+echo "the number is odd"
+else
+echo "even"
+fi
+
+
+
+
+Else-if :
+------------------------------------------------------------------------------------------------------------------------------------------
+If the condition get false then it will check one more condition
+#!/bin/bash
+echo "enter the number"
+read number
+if [ `expr $number % 2` == 0 ]
+then
+echo "the number is even"
+elif [ `expr $number % 2` == 1 ]
+then
+echo "the number is odd"
+fi
+or
+#!/bin/bash
+echo "enter the num"
+read num
+if [ $(( num % 2 )) == 0 ]
+then
+echo "the num is even"
+elif [ $(( num % 2 )) == 1 ]
+then
+echo "the num is odd"
+fi
+
+
+
+
+While Loop
+------------------------------------------------------------------------------------------------------------------------------------------
+Syntax :
+---------
+while condition
+do
+{
+statements
+}
+done
+Example :
+------------------------------------------------------------------------------------------------------------------------------------------
+init=3
+while [[ $init -le 10 ]]
+do
+echo $init
+((init++))
+done
+
+
+
+One line for loop
+#!/bin/bash
+for i in {1..5}; do echo "number: $i"; done
+
+
+
+To copy files from one to another directory
+(first create dir → run this command)
+#!/bin/bash
+for i in *; do cp $i /root/sak; done
+
+
+To copy all files from one directory to another directory
+#!/bin/bash
+for i in /etc/*.conf; do cp $i /root/sak1; echo "work done"; done
+
+
+
+To check files
+—---------------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+if [ -f /root/demo.sh ]
+then
+echo "File exists."
+else
+echo "file not exists"
+fi
+
+
+
+To check directory
+—---------------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+if [ -d $sak ]
+then
+echo "Directory exists"
+fi
+
+
+
+
+switch case
+
+Example → 1
+===============================================================================
+echo "enter a fruit name"
+read fruit
+case $fruit in
+apple)
+echo "this a apple"
+;;                    //to terminate the case (or to break the case)
+orange)
+echo "this is orange"
+;;
+mango)
+echo "this is mango"
+;;
+*)					// default case 
+echo "the fruit is not available"
+;;
+esac
+
+
+
+
+
+echo "Enter the num1"
+
+
+
+case $operation in
+> sub)
+> echo $((num1-num2))
+> ;;
+
+> mul)
+> echo $((num1*num2))
+> ;;
+
+> div)
+> echo $((num1/num2))
+> ;;
+
+
+
+
+
+Functions :
+------------------------------------------------------------------------------------------------------------------------------------------
+Function is a group of statement it will get execute whenever it is called or invoked
+------------------------------------------------------------------------------------------------------------------------------------------
+Example : 1
+------------------------------------------------------------------------------------------------------------------------------------------
+sum()
+{
+echo add a values for a and b
+read a
+read b
+x=`expr $a + $b`      #command line arguments
+echo $x
+}
+sum
+
+
+Functions :
+------------------------------------------------------------------------------------------------------------------------------------------
+Function is a group of statement it will get execute whenever it is called or invoked
+------------------------------------------------------------------------------------------------------------------------------------------
+Example : 1 (Method)
+------------------------------------------------------------------------------------------------------------------------------------------
+→  static value
+sum()
+{
+echo “the values are”
+a=10
+b=20
+x=`expr $a + $b`      #command line arguments
+echo $x
+}
+sum  # → method calling
+→ dynamic value
+sum()
+{
+echo add a values for a and b
+read a
+read b
+x=`expr $a + $b`      #command line arguments
+echo $x
+}
+sum   # → method calling
+------------------------------------------------------------------------------------------------------------------------------------------
+Example : 2 (Method with parameter)
+------------------------------------------------------------------------------------------------------------------------------------------
+→ static value
+#!/bin/bash
+sum()
+{
+        echo "printing"
+        c=$(($1 + $2 + $3))
+        echo $c
+}
+echo "enter the data here"
+sum 10 20 30
+→ dynamic input
+#!/bin/bash
+sum()
+{
+        echo "printing"
+        c=$(($1 + $2 + $3))
+        echo $c
+}
+echo "enter the data here"
+read a
+read b
+read c
+sum a b c
+
+
+
+
+Example 2 :
+------------------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+# nginx :- install,configure
+install()
+{
+echo "installing nginx"
+echo $FUNCNAME
+}
+config()
+{
+echo "configuring nginx server"
+echo $FUNCNAME
+}
+#calling block
+install
+config
+
+
+
+
+Local and Global variables →
+—---------------------------------------------------------------------------------------------------------------------------------------
+pkg=tomcat            #GLOBAL VARIABLE
+install()
+{
+echo "install $pkg"
+echo function name is $FUNCNAME
+}
+config()
+{
+pkg=nginx          #LOCAL VARIABLE
+echo "config the $pkg"
+echo $FUNCNAME
+}
+install
+config
+
+
+
+1.Array :
+------------------------------------------------------------------------------------------------------------------------------------------
+An array is a collection of items of some data type stored at a contiguous memory location...
+example :
+------------------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+arr=(sak jsp mysore goa)
+echo ${arr[@]:1}  # → start from 1st index
+echo ${arr[@]:2}  # → start from 2st index
+echo ${arr[0]} # → to print particular index value
+echo ${arr[2]}
+echo ${!arr[@]} # → to print all array index numbers
+—---------------------------------------------------------------------------------------------------------------------------------------

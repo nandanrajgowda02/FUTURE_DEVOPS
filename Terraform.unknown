@@ -1,0 +1,118 @@
+Terraform
+
+
+launch 1 instance with a name Teraform
+
+update the instance using command sudo yum update -y
+
+to install terraform run the below commands
+
+sudo yum install -y yum-utils shadow-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
+
+in aws console go to iam and create user and download access key and security key  (in CLI while they ask for what purpose)
+
+eg: sec key :JgV1DjR3ZLARzTqySplX2A63RpSqN0gjcbJrFLq5
+	access key:AKIA6PSZZ7I7QZUSQLMO
+
+
+create a .tf file and paste all the code  (here in this script we are going to launch 3 instances)
+
+provider "aws" {
+  region     = "ap-south-1"
+  access_key = "AKIA6PSZZ7I7QZUSQLMO"
+  secret_key = "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"
+}
+resource "aws_instance" "terraform_demo" {
+ami = "ami-03cb1380eec7cc118"
+instance_type = "t2.micro"
+key_name = "Test_Key_pair"
+count = "3"
+}
+
+	while configuring terraform script for time being provide ami of Terraform server
+
+after this
+
+	terraform init 
+  	terraform plan
+  	terraform apply
+
+
+
+  	later terraform destory  /// to terminate all our instances
+
+2.scenario creating security group whil ans attaching to newly launched instance
+
+  	provider "aws" {
+  region     = "ap-south-1"
+  access_key = "AKIA6PSZZ7I7QZUSQLMO"
+  secret_key = "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"
+}
+resource "aws_security_group" "web-node" {
+  name        = "web-node"
+  description = "Web Security Group"
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_instance" "terraform_demo" {
+ami = "ami-03cb1380eec7cc118"
+instance_type = "t2.micro"
+key_name = "Test_Key_pair"
+security_groups = ["${aws_security_group.web-node.name}"]
+  count         = 1
+}
+
+
+
+scenario 3:to launch instance with nginix 
+
+
+
+provider "aws" {
+  region     = "ap-south-1"
+  access_key = "AKIA6PSZZ7I7QZUSQLMO"
+  secret_key = "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"
+}
+resource "aws_security_group" "web-node" {
+  name        = "web-node"
+  description = "Web Security Group"
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_instance" "terraform_demo" {
+ami = "ami-03cb1380eec7cc118"
+instance_type = "t2.micro"
+key_name = "Test_Key_pair"
+security_groups = ["${aws_security_group.web-node.name}"]
+  count         = 1
+user_data = <<-EOF
+#! /bin/bash
+  sudo yum update -y
+  sudo amazon-linux-extras install nginx1 -y
+  sudo systemctl start nginx.service
+  sudo service nginx start
+  EOF
+}

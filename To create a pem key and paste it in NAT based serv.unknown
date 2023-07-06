@@ -1,0 +1,12 @@
+to create a pem key and paste it in NAT based server
+
+create a filename.pem by using below command
+vi filename.pem
+copy the RSA Private KEy
+to exit from the editor type-> :wq
+and update the file permission  using below command
+chmod 400 filename.pem
+
+
+
+

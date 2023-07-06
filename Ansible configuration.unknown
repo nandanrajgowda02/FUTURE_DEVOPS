@@ -1,0 +1,211 @@
+Ansible configuration 
+
+1.To test the Ansible how it works launch 3 AWS instances(1 as Master server and other 2 as node server ) with instance type as t2.micro and AMI as linux ami 2
+and after launching update all the 3 servers using the commad yum update -y
+
+2.Now in Master server to install ansible type below command
+	aws-linux-extras list (this is provide various packages offered by amazon)
+	aws-linux-extras install ansible -y (this will install ansible2 in our system)
+	and check for installed ansible version
+
+3.Now we have to configure the changes that is to be done in master server so as to connect with two nodes 
+	we need to edit the file in below path vi /etc/ansible/host
+
+	here add the group (provide name as used wish) and provide the node ip's
+		[demo]
+		3.111.149.65
+		3.110.102.174
+
+4.Need to enable some permission which already in the config file of ansible which is commented, we need to uncomment 
+	in the below path
+	vi /etc/ansible/ansibl.cfg
+
+	remove # from 
+	a]inventory
+	b]sudo_user
+
+5.Create ansible user in all the master and slave nodes with password enabled to it
+	useradd ansible
+	passwd 1234
+
+6.Now in Master and node server as a root user use the command "visudo" here we need to add the created user to get sudo 
+	priviledge
+
+	ansible ALL=(ALL) NOPASSWD:ALL
+	here from the above command we are providing user or group the ability to run any command with sudo privileges without being prompted for a password.   we need to do this changes in both master and node servers.
+
+7.In .ssh file (now we are present as root user) we need to edit the configuration of SSH configuration
+	in the path :vi /etc/ssh/sshd-config/     (in both master and node)
+
+	uncomment permit root login yes
+
+	password authentication yes (initially it will be no)
+
+8. now we have made changes in the ssh config file to make this changes get into affect we need to restart the ssh 		
+	service by using below command (IMP: the restart of sshd service should be done in all the master and node servers)
+	"service sshd restart"
+
+7.Now in master server switch to ansible used and install httpd service
+	yum install httpd -y
+
+8.to check the status of httpd we run the command "which httpd"
+
+9.to create a connection we need to a particular key called SSH key so we need to create it (as a ansible user) below 		is the command
+	"ssh-keygen"
+
+10.now to connect to the node use the below command
+	ssh <private_IP>
+
+11.While connecting to nodes using above command it will ask for the password to skip this, go to ssh directory
+	inside this use the below command  //as a ansible user
+	ssh-copy-id ansible@<private IP>
+	used to copy the public key of the local machine to the specified user account (ansible) on the remote machine with the given private IP address
+
+
+**************************************************************************************************
+
+Adhoc commands
+
+1.Command to check how many nodes are connected 
+	ansible demo --list-hosts
+
+2.To check all the nodes are reachable or not
+	ansible all -m ping
+
+3.To check how much memory is consumed
+	ansible demo -a "free -m" 
+
+4.To get uptme of each node
+	ansible demo -a "uptime"
+
+5.to get details of presently in which directory we are working
+	ansible demo -a "pwd"
+
+6.To create file in nodes 
+	ansible demo -a "touch Sample.txt"
+
+7.To verify whether file is created or not
+	ansible demo -a "ls"
+
+8.To restrict changes on particular node (here the nodes are classified based on index value demo[0] this points to 	1st server, demo[1] this points to 2nd server)
+	
+	ansible demo[0] -a "touch cool.txt"
+
+9.To remove the files on particular node
+	ansible demo[0] -a "rm -rf cool.txt"
+
+10.to install some package to nodes through master server
+	ansible demo -b -a "yum install httpd -y"
+	or
+	ansible demo -b -a "systemctl start httpd"   (to start the http service)
+
+11.to check the status of the particular http service in node 
+	ansible demo -b -a "which httpd" this is to check where the package has been downloaded
+	or
+	ansible demo -b -a "systemctl status httpd" to chcek the status of httpd after it is started
+
+
+12.to remove the service 
+	ansible demo -b -a "yum remove httpd -y"
+
+Module command
+
+13.ansible demo -m setup   this command provide the information about the node overall details
+
+14.to get the details of os family to which node belongs  we use filter commands
+	ansible demo -m setup -a "filter=ansible_os_family"
+
+15.to get the memeory details of node
+	ansible demo -m setup -a "filter=ansible_memory_mb"
+
+16.to get know the details of uptime
+	ansible demo -b -m command -a uptime
+
+17.to install httpd service using module command
+	ansible demo -b -m yum -a "pkg=httpd state=present"
+
+18.to start the service 
+	ansible demo -b -m service -a "name=httpd state=started"
+
+19.to stop the service 
+	ansible demo -b -m service -a "name=httpd state=stopped"
+
+20.to uninstall the service
+	ansible demo -b -m yum -a "pkg=httpd state=absent"
+
+21.to create group 
+	ansible demo -b -m group -a "name=shree state=present"
+
+22.to validate the group is created or not 
+	ansible demo -b -a "cat /etc/group"
+
+23.to delete the group 
+	ansible demo -b -m group -a "name=shree state=absent"
+
+24.to create the user 
+	ansible demo -b -m user -a "name=shree state=present"
+
+25.to check the user created or not 
+	ansible demo -b -a "cat /etc/passwd"	  //there is no rule to use -b 
+
+26.to delete the user
+	ansible demo -b -m user -a "name=shree state=absent"
+
+27.To create directory
+	ansible demo -b -m file -a "path=/home/ansible/shree state=directory"
+ 
+ 	we can give permission for the particular directory using below command
+ 	ansible demo -b -m file -a "path=/home/ansible/shree state=directory mode=0712"
+
+28.To create file
+ ansible demo -b -m file -a "path=/home/ansible/shree/file.txt state=touch mode=0777"
+
+29.to remove the file
+	ansible demo -b -m file -a "path=/home/ansible/shree/file.txt state=absent"
+
+
+
+
+--- #my variable playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  vars:
+    pkgname: httpd
+  tasks:
+    - name: install httpd on linux machine
+      action: yum name='{{pkgname}}' state=present
+
+      
+--- #my handler playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install httpd on linux
+      action: yum name=httpd state=present
+      notify: restart httpd
+  handlers:
+    - name: restart httpd
+      action: service name=httpd state=started
+
+
+--- # my loops playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: add list of users in my nodes
+      user: name='{{item}}' state=present             //state=absent to delete the user listed below
+      with_items:
+        - ajit
+        - mahantesh
+        - shannu
+        - supriya
+
+
+        to check user created or not
+        ansible demo

@@ -1,0 +1,31 @@
+Setting up the Virtual private cloud
+-------------------------------------
+1.got to VPC service create a VPC by giving IPv4 range
+2.in subnet select the required VPC and create a subnet by giving subnet name and ipv4 CIDR block range(eg:10.0.0.0/25)then click on create subnet 
+3.similarly go for private subnet and provide the ipv4 CIDR block range(eg:10.0.0.128/25)
+4.Create Route tables for both public and private subnets.
+then attach public subnet to public route table. similarly for privtate su
+5.create 2 instance that for public and private and accrodingly attach the subnets and launch
+6.create 2 internet gateways for both public and private subnets and attach it to our VPC.
+7.in public route table in edit Routes and add new route with public gateway (here it is for all traffic so add 0.0.0.0/24)
+8.in private route table in edit Routes add new route with Nat gateway.
+
+9.add our private RSA key to public instance
+vi filename.pem
+add the Private key what we pasting
+{4     vi Publickeypair.pem
+    5  ls -lrth
+    6  chmod 400 demo.pem
+    7  chmod 400 Publickeypair.pem
+    }
+===========================================================
+===========================================================
+Setting up IAM user account along with creating rules,policies and groups
+1.To create a IAM user got to IAM service here click on users->Add users
+2.here provide the user name and if the user need console access provide access by ticking on provide console access
+3.Coming to password management we set it as auto generated here user will be provided with a temporary password for first login and he will get a pop up to setup his own password
+as AWS automatically attaches a policie to change password
+4.coming to attach policies and other roles,here we need to see what are all the access the user needs and accordingly we need to provide the access
+
+To Create a Policy in IAM service
+1. "AWS": "arn:aws:iam::995547019839:user/SreenidhiIAMAccout"

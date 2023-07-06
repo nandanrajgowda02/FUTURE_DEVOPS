@@ -1,0 +1,223 @@
+					 --------------Maven installtion in Linux--------------
+
+
+launch 1 linux instance in AWS 		
+access the instance through mobaxterm
+
+search for maven download in chrome 
+click on Download Apache maven
+
+and copy the link address ---->  https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz		
+
+now go to mobaxterm 
+then convert as root
+
+
+now download 
+ wget https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz
+
+after downloading the apache maven
+untar the file
+
+tar -zvxf <file>
+
+
+now rename the untared file as Maven
+
+mv <oldname> <Maven>
+
+*****************
+now go inside the directory cd Maven/
+
+no go inside the bin directory
+
+cd bin/
+
+/root/Maven/bin (this is the path)    whixh we need to remember
+******************
+now come back to root
+
+to show the hidden files ls -a
+
+edit .bashrc using nano
+
+now we need to set a path 
+
+after fi
+
+print below line
+
+export PATH=/root/Maven/bin:$PATH
+
+ctrl+x for exit 
+
+now using cat check we have edited the file properly 
+
+now we need to restart or refresh the system because we have altered the bash file use below command
+
+source .bashrc
+
+is used to display the version of Apache Maven installed on your system.
+mvn --version
+
+
+we cannot bulid a jar file without having java installed in linux system
+
+now we need to install java
+
+yum install java-11* -y
+
+**********************************************************************************
+
+
+
+
+--Sample Maven Project----
+1.launch one instance and install maven
+2.to create our own maven use below command  this will provide template of maven project 
+mvn archetype:generate
+3.here choose default template :2049 (type 2049) (this is default Sample maven project) then enter
+4.now click on 8 and enter
+5.now give groupid(company or org name):we can give any name(jsp)
+6.now give artifactid(roject id):we can give any name
+7.version is default
+8.package: click on enter
+9.validate and type y
+10.now we will be having our project
+11.enter into the project  and check for pom.xml and src ////default target folder will not be there 
+12.now go inside src/main/java   here will be having our package 
+13.now enter the package and here there will be default file calles App.java
+14.we can read the file cat App.java
+15.come back to root user
+16.enter the maven project  (where we can run Maven command)
+17."mvn validate" command will validate the project structure
+18."mvn clean" command will clean the cache of previous project 
+19.now we need to compile the project source code using the command "mvn complile" 
+once the compilation is done it will create .class file target directory 
+20.now check if target directory is created or not
+21.check if .class file is present in target direcotry
+22.here we have a direcotry called classes enter the direcotry and App.class should be present
+23.now to test the project go to cd /virus 
+24.to test use command "mvn test"  this command will check whether the source code is working properly or not(unit testing) this testing is done by developers
+25.after testing go inside target direcotry  
+26.here we will be having all details 
+27.here go inside surefire-report this will have reports of testing
+28."mvn package" this command is used to generate an executable file which is in JAR[java archetype] format,that file will be present in target directory
+29.now inside the target direcotry we will be having JAR file
+30.now we need to do integration test /this is to verify integration is properly working or not
+below is the command
+mvn verify
+31.now we need to insall the build in the local system
+now enter as root user then enter the project and use the command "mvn install" This is going to install our MAven proj in our local system by downloading dependencies in .m2 direcotry
+32.now go to root and check for all hidden files ls -a
+33.here we can see .m2 file which has directory root/.m2/repositary/jspiders/virus/1.0-SNAPSHOT/   (inside pom file we will be having all the dependencies and plugins) this will give information about our build
+
+34.to get a project document   this will generate documentaion of my project 
+cd virus/
+"mvn site"
+
+35.after running above command goto cd /virus/target/site
+here we will be having all the files
+
+
+
+------------------Till now we have only installed the build in our local system yet to deploy in servers---------------------
+
+36.to create a .WAR file
+
+here we can go for deinteractive mode  --enter the below command and click on enter
+
+mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp
+or
+mvn archetype:generate -DgroupId=testyentra -DartifactId=qtalk -DarchetypeArtifactId=maven-archetype-quickstart
+-DinteractiveMode=false
+or
+mvn archetype:generate -DgroupId=Palimar -DartifactId=Shree -DinteractieMode=false
+
+mvn archetype:generate -DgroupId=Palimar -DartifactId=Shree -DinteractieMode=true
+
+37.provide groupid:jspiders
+
+38.provide artifactid:testfreshers
+
+39.version:default
+
+40.package:default
+
+41.click on y
+
+42.now goinside the newly created directory
+
+43.we will see same structure that is pom.xml src
+
+44.go inside the src->main->webapp---- here default file will be present
+
+45.path for default web app page:root/testfreshers/src/main/webapp
+
+46.now we need to validate
+
+47.now do mvn clean
+
+48.now do mvn compile
+
+49.now run mvn test
+
+50.now create package using command: mvn package
+
+51.now the .war will be created inside target direcotry
+
+52.now we need to verify :mvn verify
+
+53.install the .war file using:mvn install
+
+54.now to check the installed .war file goto  root/.m2/jspiders/testfreshers/1.0-SNAPSHOT
+
+55.now to get the documentation use the command:mvn site
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+notes by sir
+
+step 1 :- Open Browser and Search Maven and choose a Official Website of Maven and click on Download
+step 2 :- Copy the Link →
+	wget https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz
+Step 3 : To extract the tar file → tar xvf apache-maven-3.9.2-bin.tar.gz
+Step 4 :Rename the apache-maven-3.9.2 to maven → mv apache-maven-3.9.2 Maven
+Step 5 :- change directory to → cd /root/Maven/bin → Pwd :- /root/Maven/bin
+	Nano ~/.bashrc  → to exit → ctrl + x → y → enter
+	cat ~/.bashrc → it will show like this
+{      # .bashrc
+# User specific aliases and functions
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+export PATH=/root/Maven/bin:$PATH        }
+then come to root directory by using command → cd
+To activate the path : source .bashrc
+step 6 :Install java why because maven is written in java
+	yum install java-11* -y
+	 mvn --version

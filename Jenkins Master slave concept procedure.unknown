@@ -1,0 +1,152 @@
+Jenkins Master slave concept procedure
+-------------------------------
+
+
+1.launch 2 servers
+ 	1st server should have jenkins installed in it 
+  	2nd server should have java installed in it (here we think as we are developing software using java lang)
+
+2.For the master server where jenkins is installed make inbound rules to pass ALL Traffic
+
+3.	Create a IAM role having a full access to AWS S3 service and attach it to our master instance
+	this will come to picture when we are going to copy the config file from linux instance to S3 bucket
+
+4.To install java in slave server use below commands
+	sudo amazon-linux-extras list
+	some times when run the above command we may get the error "command not found" so to overcome this we need to update our linux system using the command "sudo yum update -y"
+
+5.to install java use the below command "sudo amazon-linux-extras install java-openjdk11 -y"
+
+6.Now go to Master server and install jenkins by creating a shell script with below commands in it
+	sudo yum update -y
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum upgrade -y
+sudo amazon-linux-extras install java-openjdk11 -y
+sudo yum install jenkins -y
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+echo "******* jenkins installed successfully *******"
+
+7.And follow the steps what we had done to launch Jenkins servers like copy the code paste it in the administrator (/var/lib/jenkins/secrets/initialAdminPassword)
+	provide username and password, install required plugins
+
+8.after logging into the jenkins web we need to create a new node so that we can control the slave server
+	go to manage jenkins>Nodes and cloud >new Node>prove node name>check permanent agent>create
+
+9.provide 
+	a.Description
+	b.number of executors (we can give any count for now i will make it as 2)
+	c.Remote root directory Path us /home/ec2-user/build    (it will create a build directory)
+	d.provide lables as (i will give "Slave_service")
+	e.Usage as use this node as much as possible
+	f.Launch method as launch agent by connecting it to the controller 
+	g.Internal data directory as remoting
+	h.directly go to Use WebSocket and check the box
+	i.click on save
+
+10.Now click on slave_node and we will get the code where we are going to paste it on 
+	slave server
+	commad is show below
+
+	curl -sO http://15.206.74.139:8080/jnlpJars/agent.jar
+[ec2-user@ip-172-31-39-216 ~]$ java -jar agent.jar -jnlpUrl http://15.206.74.139:8080/computer/Slave%5FNode/jenkins-agent.jnlp -secret 42bf6820fdb4846fe9a4179f8e5b5216a6fdbcb2552ab98e345f0a2f893f8a74 -workDir "/home/ec2-user/build" &
+
+	here in the above command public ip of master server is seen
+	the <space>& helps to have connection with master server in the background
+
+11.to validate master slave is working properly create a job 
+	a.create a free style job
+	b.in General:check Restrict where this project can be run
+	and provide lable "Slave_service"
+	c.go to build steps :execute shell
+	below is simple shell script for validating
+	uptime
+	echo $WORKSPACE
+	echo "JOB DONE"
+
+12.click on apply and save
+
+13.before copying the jenkins config we need to stop the jenkins 
+	sudo systemctl stop jenkins
+
+14.to copy the config file of jenkins to s3 we need to create a s3 bucket first with below configuration
+	a.provide bucket name
+	b.ACL enabled
+	c.object ownership:object writer
+	d.uncheck block all IPs
+	e.check acknowledge
+	f.bucket versioning :enabled
+	g.default encryption>Encryption key type:Amazon S3 managed keys (SSE-S3)>create bucket
+
+15.below is the command to to pull files from linux to s3
+	aws s3 cp /home/ec2-user/jenkins_config.tar.gz s3://jenkinsconfigfile/jenkins_config.tar.gz
+
+16.launch the backup jenkins master instance and install jenkins
+
+17.After jenkins is installed 
+	we need to stop the jenkins and we need to remove newly create jenkins file
+	using the following command > rm -rf /var/lib/jenkins
+
+18.now we need to pull the files from the s3 bucket using following commands
+	aws s3 cp s3://jenkinsconfigfile/jenkins_core_file.tar.gz jenkins_core_file.tar.gz
+
+19.now we need to place this config file in the /var/lib/jenkins path or current path using following command
+	tar -zvxf file.tar.gz -C /
+
+20.now start the jenkins server
+	systemctl start jenkins
+
+21.now try to login to Jenkins UI by using username and password (in URL change the IP to backip 	
+	master jenkins IP)
+
+22.after this go to manage jenkins>Nodes and clouds>check whether connection is created between master slave
+	usually it is diconnected
+
+23.to reconfigure first we need to update the Jenkins URL IP by going to manage jenkins>System>jenkins_URL>update with 	   newly launched back up jenkins server 
+
+24.now go manage jenkins>Nodes and clouds>click on slave nodes>here we will be having cmd which we need to again paste
+	it in slave server and run that command
+
+25.To validate master slave is working we need to once again click on build again for the free style project what we 
+	have already created 
+
+26.To validate we can verify by the console output by using the command "uptime"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+to push code/file from ec2 instance to s3 
+aws s3 cp /home/ec2-user/jenkins_config.tar.gz s3://jenkinsconfigfile/jenkins_config.tar.gz
+
+to push code/file from s3 to ec2 instance
+aws s3 cp s3://jenkinsconfigfile/jenkins_core_file.tar.gz jenkins_core_file.tar.gz 
+
+
+tar -zvxf file.tar.gz -C /

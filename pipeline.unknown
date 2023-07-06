@@ -1,0 +1,73 @@
+pipeline  
+{
+    agent any
+    tools {
+        maven 'maven'
+    }
+    stages {
+        stage('git clone') {
+            steps {
+                git 'https://github.com/sreenidhipalimar98/TEST_DEPLOYMENT_FILES.git'
+            }
+        }
+
+        stage('validate') {
+            steps {
+                sh 'mvn validate'
+            }
+        }
+        stage('clean') {
+            steps {
+                sh "mvn clean"
+            }
+        }
+        stage('compile') {
+            steps {
+                sh "mvn compile"
+            }
+        }
+        stage('test') {
+            steps {
+                sh "mvn test"
+            }
+        }
+        stage('package') {
+            steps {
+                sh "mvn package"
+            }
+        }
+        stage('verify') {
+            steps {
+                sh "mvn verify"
+            }
+        }
+        stage('install') {
+            steps {
+                sh "mvn install"
+            }
+        }
+        stage('site') {
+            steps {     
+                sh "mvn site"
+            }
+        }
+
+    }
+}
+
+
+
+--------
+
+
+
+
+
+
+
+
+In a typical Maven build lifecycle, the compile phase is executed before the package phase. However, when you run mvn package, Maven automatically performs the necessary steps, including compilation, to build the project and create the artifact.
+
+The package phase in Maven is responsible for packaging the compiled code and resources into the desired output format, such as a JAR or WAR file. It implicitly triggers the compile phase as part of the build process. Therefore, there is no need to explicitly invoke mvn compile before mvn package in most cases.
+
+By running mvn package, Maven will compile the source code, run tests (if any), and package the compiled classes and resources into the specified output format. If you have a standard Maven project structure and have properly configured your project's pom.xml file, Maven will handle the compilation step internally during the package phase.

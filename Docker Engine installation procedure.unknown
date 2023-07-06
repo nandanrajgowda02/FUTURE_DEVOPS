@@ -1,0 +1,387 @@
+Docker Engine installation procedure
+
+sudo yum update -y
+sudo yum search docker
+sudo yum info docker
+sudo yum install -y docker
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+sudo systemctl status docker.service
+docker version
+sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
+
+
+
+to run a all the above command at once create a script file(.sh)
+eg:
+vi Docker.sh
+enter the above file and paste all the above command and exit 
+
+to run the Docker.sh shell script file
+sh Docker.sh
+
+
+-----------
+
+docker images //to get the docker images list and details
+show all locally stored images
+
+docker ps //to get the docker container details //list the running containers
+
+
+to pull image from docker hub to instance
+docker pull ubuntu
+
+
+docker run -it -d ubuntu //to hide complete operation in the background//convert image to container
+
+after the above command run we will now look into container details 
+docker ps  //to get running container details
+docker ps -a //to get all the container details(both active and inactive)
+
+to stop the container 
+docker stop containername
+
+to restart the container
+docker start container name/ID
+
+
+to remove the container
+1)stop the container : docker stop container name/ID
+2)docker rm containerID
+
+
+to remove docker images from image list
+docker rmi imageID
+
+Docker build,run,pull
+
+
+go to docker hub
+click in repository
+create repo
+by giving name
+add give permission public or private
+click on create
+
++----------------------------------------------------------------------+
+
+[root@ip-172-31-34-255 ec2-user]# history
+    1  docker images
+    2  docker ps
+    3  docker pull ubuntu
+    4  docker images
+    5  docker run -it -d ubuntu
+    6  docker ps
+    7  docker/?
+    8  docker pull centos
+    9  docker images
+   10  docker ps
+   11  docker run -it -d centos
+   12  docker ps
+   13  docker stop 0c4c707ef754
+   14  docker ps
+   15  docker ps -a
+   16  docker ps -a
+   17  docker start 0c4c707ef754
+   18  docker ps -a
+   19  docker list
+   20  docker stop 0c4c707ef754
+   21  docker stop 772b9e30620e
+   22  docker ps -a
+   23  docker images
+   24  docker images
+   25  ls -lrth
+   26  doceker delete ubuntu
+   27  docker delete ubuntu
+   28  rm ubuntu
+   29  docker images
+   30  docker ps
+   31  docker rmi ubuntu
+   32  docker rm -rfv ubuntu
+   33  docker ps -a
+   34  docker rm 0c4c707ef754
+   35  docker rm 772b9e30620e
+   36  docker ps -a
+   37  docker images
+   38  docker history
+   39  history
+   40  docker image
+   41  docker images
+   42  docker images 08d22c0ceb15
+   43  docker images
+   44  docker rmi
+   45  docker images
+   46  docker rmi
+   47  docker remove centos
+   48  docker rmi centos
+   49  docker images
+   50  docker rmi ubuntu
+   51  docker images
+   52  history
+
+
+   --------
+   to create build in docker hub
+
+   1.first pull the images and convert into container
+   2.commit this and connect container to repository
+   docker commit b670da4ed884 sreenidhipalimar/dockerhub
+b670da4ed884-containerID, sreenidhipalimar/dockerhub-dockerhub repo name
+	3.to push the container to docker hub
+	 docker push reposioryname
+	 (docker push sreenidhipalimar/dockerhub)
+
+	 (we may get deniend error)
+	 now give username and passoword by typing below command
+
+	 docker login
+	 give username and password
+
+	 now again execute
+	 docker push reposioryname
+
+	 
+
+
+
+	 ---------------------
+
+
+	 pull webserver ngnix
+
+	 docker pull nginx
+
+
+	 to run the ngnix webser we need port number
+	 here 80will be http fixed port
+	 docker run -it -d -p 8000:80 nginx
+
+
+	 ------------------
+	 now pull amazonlinux
+	 docker run -it -d amazonlinux
+
+
+     to enter the container(i.e is entering into to amazonlinux server)
+	 docker exec -it 3a8ea067ff58 bash
+
+
+	 go tomcat 9
+	 copy the tar.gz link address from CORE
+	 https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomcat-9.0.73.tar.gz
+
+
+    to istall tomcat into instance
+    wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomcat-9.0.73.tar.gz
+
+    to unzip tar file
+    tar -zvxf apache-tomcat-9.0.73.tar.gz
+
+  after unziping enter into the apache-tomcat-system
+  then go to
+    cd bin
+    ls
+
+    ./startup.sh
+
+    -----------
+    to complete the above action we need to install java
+    yum install java -y
+
+    ./startup.sh
+
+
+-----------------------
+shortcut method
+
+mkdir dockerfile     (Docker file is a text file which contains a set of instructions used to build a docker image)
+
+enter the folder
+cd dockerfile
+
+FROM amazonlinux
+    MAINTAINER <Enter Docker hub mail_id>
+    RUN yum update -y
+    RUN yum install -y wget
+    RUN yum install -y tar
+    RUN yum install -y gzip
+    RUN wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.73/bin/apache-tomcat-9.0.73.tar.gz
+    RUN tar -xf apache-tomcat-9.0.73.tar.gz
+    RUN yum install -y java
+    RUN sh apache-tomcat-9.0.73/bin/startup.sh
+
+
+    create a docker file through vi
+    vi dockerfile
+
+
+    go to root that (cd)
+
+    here create a docker build
+
+docker build -t reponame foldername
+    docker build -t sreenidhipalimar/dockerfilerepo Dockerfile
+
+    no the image is created
+
+    after this convert the build into container
+
+    after converting enter the container
+    docker exec -it f33065a406b6 bash
+
+
+-------------------------------------------------------------------------------
+    ------------------------------
+    Docker compose
+
+    create a docker-compose.yml
+    and insert the below
+
+    version : '3'
+services:
+  web:
+    image: nginx
+    ports:
+      -  4000:80
+  db:
+    image: redis
+--------------------------------------------
+    after that to run the .yml(get another markup language) file use the below command
+
+    docker-compose up -d  (here docker-compose is the filename of .yml extension)
+
+    note:we cannot change the docker-compose.yml file name this is fixed
+
+  to remove the containers 
+  docker-compose down
+
+   
+-------------
+
+after running the docker-compose file containers will be created 
+
+
+
+Docker compose is a tool used for defining and running multiple containers,we can run multiple containers as a single service 
+
+it is written in yaml language (.yml)
+
+-----------------------------------------------
+
+Docker volume
+Volumes are the preffered mechanism for persisting data generated and used by docker container
+IN docker when we create a container there has to be some place to store the data
+that is called volume
+in a volume we have 2 types
+1.Anonymus volume
+2.Named volume
+------------------
+commad to check the docker volume
+
+cd/var/lib/docker/volumes
+
+
+(pwd) is a command used to verify present working directory
+
+
+how to create our own volume?
+docker volume create volumename
+
+to verify volume created or not for to same path(cd/var/lib/docker/volumes)
+
+docker volume rmv(to remove volume)
+
+--------------------------------
+Volume Replication
+scenario
+1.here pull a httpd images and convert it as container
+2.create a volume inside cd /var/lib/docker/volumes
+3.to link the httpd volume with our newly created volume below is the command
+docker run -itd -v volume1://usr/local/apache2/htdocs/ -p 8080:80 httpd
+to validate log into httpd and go into usr/local/apache2/htdocs
+and create a .txt file
+to validate exit from httpd
+and for to docker volumes and the newly created volume here the .txt file will be replcated
+
+
+------------------------------
+for our ref
+pull httpd 
+convert to container
+exec the httpd container(i.e going inside the container)
+
+docker volume inspect <volumename>  //to inspect the volume i.e will get details of the volume
+
+
+
+-------------------------------------
+Docker Swarm
+
+This is a tool which is an orchestration tool it allows multiple containers deployed
+across multiple host style
+
+a node is an instance of the docker engine participating in this swarm
+
+a cluster in the docker repo referes to multiple nodes joined using swarm
+
+docker swarms will manage all the containers in the running in different host system
+
+let us assume we have  nodes manager and worker node
+here manager node will manage all the function carried out in worker node
+
+"docker swarm init"
+ this command is used to initialize the manages node
+after entering the above command
+will get a link where this command should be copied in worker load so it will come under master load 
+
+docker swarm leave is to leave as a worker load from master load
+
+to provide extra fuctionalities to worker load use below command
+
+docker node promote engineversion(of worker node)(or hostname)
+
+to demote
+docker node demote engineversion(of worker node)(or hostname)
+
+"docker node ls" to lsit the docker nodes
+
+
+docker swarm join --token //to join swarm from any nodes
+
+---------------------------------------------------
+
+Docker -Service:
+is used to create a contaier which contains more than one service
+where we can replicate this from manager node to worker node
+
+to initialize the docker service (here we have used httpd as service)
+docker service create --name demo --replicas 2 --publish 8080:80 httpd
+
+docker ps will give the list of container
+
+docker service ls 
+this will list out all the docker service
+
+
+delete the docker service
+docker service rm service-id
+
+docker auto scalling
+
+docker service scale <scale ID>=5
+
+to verify: go inside the container
+the go to cd htdocs/
+then 
+cat index.html
+
+
+docker container stats // this will give entire details 
+---------------------------------------------
+
+Docker Notes:
+Docker is a container tool which is used to automate the deployment of an application
+in a light weight container 

@@ -1,0 +1,46 @@
+Hibernate procedure
+1.create a maven project
+2.in src/main/resource create a folder name with META-INF
+3.now in the same folder create a file name called persistence.xml
+4.here delete the exixsting code present and paste the below code
+
+
+
+
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+	version="2.1">
+
+	<persistence-unit name="dev">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>      <!-- for caching -->  
+		<properties>
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.cj.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://localhost:3306/DataBase_Name" />
+			<property name="javax.persistence.jdbc.user"
+				value="UserName" />
+			<property name="javax.persistence.jdbc.password"
+				value="PassWord" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+
+		
+		</properties>
+	</persistence-unit>
+</persistence>
+
+
+
+5.here in the above line of code add database and username and password
+
+6.now add my sql connector java driver and hibernate core to pom file.
+
+7.Create a package in src/main/java called hibernate and create a class called forconnection
+
+8.here class name itself a table name.-

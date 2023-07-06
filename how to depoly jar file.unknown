@@ -1,0 +1,86 @@
+how to depoly jar file 
+
+
+2 instances(1 jenkins , 1 tomcat)    in jenkins server install git 
+
+download tomcat service 
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.76/bin/apache-tomcat-9.0.76.tar.gz
+and untar the file 
+
+and install the java package in the same tomcat server
+
+go tomcat file
+got to conf 
+
+vi tomcat-user.xml
+
+paste the scrpit at the end of the page 
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+
+come to root
+p
+go inside apache>webaap>manager>META-INF>configure context .xml
+  
+
+ <!--  beginning   end-->   //how to comment
+here commenting the below lines
+ <!-- <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor"
+                   sameSiteCookies="strict" />
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+        allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+go to cd /bin/startup.sh // to start the tomcat service     
+
+then install one more java service
+yum install java 1.8* -y
+
+//to validate publicip:8080
+
+in server 2 launch jenkins install 
+
+then log into jenkins webpage 
+
+managejenkins>plugins>avalilableplugins>deploy with container >select without restart
+
+managejenkins>tools>add maven>provide name>apply and save
+
+
+
+new item>create a item with free style>got build steps and select Invoke top-level Maven targets (now no need to configure git )
+maven version:maven>goals:clean install>
+post build actions>Deploy war/ear to a container> paste **/*.war
+
+provide context path (name anything) 
+containers:Tomcat 9.x Remote
+add >jenkins>provide username :admin>password:admin >save and apply
+
+click on add once again>select admin/*****
+
+tomcat url:http://65.2.184.255:8080/  (the one which you launched).
+apply and save
+
+
+go to tomcat server  manage app click on project
+
+
+/root/apache-tomcat-9.0.76/conf/tomcat-users.xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+/root/apache-tomcat-9.0.76/webapps/manager/META-INF/context.xml
+https://github.com/ajit40/project-1-cicd-for-webapp.git
+http://13.127.101.147:8080/project-1-webapp/
+
+
+
+
+
+tomcat
+
+s3cret

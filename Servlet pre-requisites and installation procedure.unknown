@@ -1,0 +1,155 @@
+Servlet pre-requisites and installation procedure
+=========================================================
+we are conveting our eclipse into a live server
+
+here to create a new workspace 
+go to file here click on switch workspace->other here provide the path and folder name
+
+default should be java EE
+
+click on window icon then click on show view ->servers
+
+click on "No server are available.click this link to create a new server"
+
+here select apache folder in this choose Tomcat v9.0 server; then click on next
+
+now we need to install tomcat latest server from browser
+choose 64 bit windows zip(pgp,sha512)
+
+extract the downloaded file
+
+select Apache Tomcat v9.0 folder and click on finish
+
+we should be getting Tomcat v9.0 server at local host[Stopped,Republish]
+and the URL will be localhost:8080
+
+to start the server
+right click on server and click on start
+
+how to create  project 
+how to create a web project      (file>new>dynamicwebproject)  
+file-new-dynamic web project
+
+next-next-select the check box  (generate web.xml)
+
+to add the html file click on src->main>java>webapp>right click new>html_file
+
+create a file and save the file
+
+to add the file to the server 
+right click on the server >add or remove>selet the file you want to push it to server
+
+ctrl+f11 is to load the file to and run the file in the server
+
+=============================================
+
+
+
+file>new maven project
+in catalog chose maven central or all catalog
+
+now choose artifact id maven-archetype-webapp
+
+to update the project 
+select the project then click on ALt+f5
+
+to overcome the error
+right click on project click on run as> servers >ok
+
+to overcome java resource error in left side
+right click on project >properties>java build>select all >apply
+
+
+
+
+achor take only redirects but if we use achor tag it will carry the values also
+and name tag should be present
+
+here from web reserver we are going to send the request server intern server will pass the request to servlet
+
+
+req.getParameter("num1") // here the value will always in the form of integer
+
+
+exaplanation for system.out.println("")
+here system is a final class
+println("") is a method 
+
+
+genericservlet is an abstaract class where we are going to extends
+
+Servlet is a interface where we are going to implement
+
+
+we can map in 2 ways using @webservlet  (this is a annotation)
+or by using xml 
+
+
+
+-----------------------
+<a href="http://localhost:8080/servlet_signup_login/Signup.html"><button type="button">Sign up</button><br></a>
+
+or 
+
+//<form action="Signup.html">
+//<button>SignUp</button>
+//</form>
+
+<a href="http://localhost:8080/servlet_signup_login/Login.html"><button  type="button">Login</button><br></a>
+
+ or
+
+//<form action="Login.html">
+//<button>Login</button>
+//</form>
+
+=================================
+
+
+
+
+types of error 
+
+1.if we removed "/" in the mapping we get staring tomcat failed 
+2.if we have 2 diff classes accepting same url  (eg :/add URL on diff classes)
+(same class can have 2 diff URL)
+3.while we use web.xml for mapping if we give servlet name diff in servlet and servlet mapping field
+
+4.404 Error:a.if file name is wrong 
+      b.if URL is not mapped
+      c.if file is not present
+
+5.405 Error:if the method is restricted to pass only GET or only POST but we send the vice versa data we get the error 
+
+6.500 Error:If we make mistake in the code
+            if we pass uncovertable parameter that is from String to int
+
+7.if we don't have src/main/recourse
+
+
+**********************
+
+if we get any alert or pop up of there is no port available then we need to do some changes in server.xml file 
+
+
+
+default       --><Server port="8005" shutdown="SHUTDOWN">
+present        --><Server port="8082" shutdown="SHUTDOWN">
+
+
+
+
+  default
+Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
+    -->
+    <Connector connectionTimeout="20000" maxParameterCount="1000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
+    <!-- A "Connector" using the shared thread pool-->
+
+
+
+  present  
+
+  Define a non-SSL/TLS HTTP/1.1 Connector on port 8081
+    -->
+    <Connector connectionTimeout="20000" maxParameterCount="1000" port="8081" protocol="HTTP/1.1" redirectPort="8443"/>
+    <!-- A "Connector" using the shared thread pool-->

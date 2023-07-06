@@ -1,0 +1,5 @@
+to connect to a AWS instance through Mobaxterm
+
+1.after launching the ec2 instance to connect to the instance we are going to use Mobaxterm 
+2.here click on session and go to SSH and enter the public ip address and 
+3.check on private key and add .pem file and click on ok
